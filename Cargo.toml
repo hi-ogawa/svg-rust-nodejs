@@ -1,0 +1,11 @@
+[package]
+name = "svg2png-nodejs"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+resvg = "0.23.0"
+usvg = "0.23.0"
+tiny-skia = "0.6"
+librsvg = { git = "https://gitlab.gnome.org/GNOME/librsvg", branch = "librsvg-2.54" }
+cairo-rs = { version = "0.15", features=["png"] }
