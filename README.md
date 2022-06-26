@@ -13,9 +13,10 @@ convert test.svg test.im.png  # internally uses inkscape (if available) or librs
 
 # build nodejs binding
 npm run napi:release
-node -e 'require("./").svgToPng("./test.svg", "test.node.png", "Roboto", "/usr/share/fonts/TTF/Roboto-Medium.ttf")'
+node -e 'require("./").svgToPng("test.svg", "test.node.png", "Roboto", "/usr/share/fonts/TTF/Roboto-Medium.ttf")'
 
 # publish npm package
+npm run release
 ```
 
 ## todo
@@ -24,6 +25,7 @@ node -e 'require("./").svgToPng("./test.svg", "test.node.png", "Roboto", "/usr/s
 - [x] font
 - [x] nodejs binding
 - [ ] deploy on aws lambda
+  - build library for amazonelinux container https://hub.docker.com/_/amazonlinux since locally built glibc on archlinunx is not compatible
 - [ ] hack unsupported `dominant-baseline`
   - https://github.com/RazrFalcon/resvg/issues/119
   - https://gitlab.gnome.org/GNOME/librsvg/-/issues/414
