@@ -11,7 +11,8 @@ package_files=(
   package.json
   index.js
   index.d.ts
-  svg-rust-nodejs.linux-x64-gnu.node
+  build/napi/svg-rust-nodejs.lts-debian.node
+  # build/napi/svg-rust-nodejs.linux-x64-gnu.node
 )
 
 rm -rf "$package_dir"

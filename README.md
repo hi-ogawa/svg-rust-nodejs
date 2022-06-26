@@ -11,9 +11,14 @@ cairosvg test.svg '--background=#ffffff' -o test.py.png
 inkscape test.svg -o test.is.png
 convert test.svg test.im.png  # internally uses inkscape (if available) or librsvg
 
-# build nodejs binding
+# build nodejs binding on local machine
 npm run napi:release
-node -e 'require("./").svgToPng("test.svg", "test.node.png", "Roboto", "/usr/share/fonts/TTF/Roboto-Medium.ttf")'
+node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("test.svg", "test.node.png", "Roboto", "/usr/share/fonts/TTF/Roboto-Medium.ttf")'
+
+# build in napi-rs debian image
+docker-compose build builder
+docker-compose run -T --rm builder cat build/napi/svg-rust-nodejs.linux-x64-gnu.node > build/napi/svg-rust-nodejs.lts-debian.node
+node -e 'require("./build/napi/svg-rust-nodejs.lts-debian.node").svgToPng("test.svg", "test.node.png", "Roboto", "/usr/share/fonts/TTF/Roboto-Medium.ttf")'
 
 # publish npm package
 npm run release
@@ -24,8 +29,9 @@ npm run release
 - [x] background
 - [x] font
 - [x] nodejs binding
-- [ ] deploy on aws lambda
-  - build library for amazonelinux container https://hub.docker.com/_/amazonlinux since locally built glibc on archlinunx is not compatible
+- [x] deploy on aws lambda
+- [ ] testing and CI
+- [ ] build for multi platform
 - [ ] hack unsupported `dominant-baseline`
   - https://github.com/RazrFalcon/resvg/issues/119
   - https://gitlab.gnome.org/GNOME/librsvg/-/issues/414

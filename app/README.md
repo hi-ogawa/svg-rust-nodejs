@@ -15,4 +15,7 @@ vercel projects add svg2png-hiro18181
 vercel link -p svg2png-hiro18181
 npm run deploy
 npm run deploy:production
+
+# example
+curl https://svg2png-hiro18181.vercel.app/svg2png -d '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 900 600"><rect fill="#fff" height="600" width="900"/><circle fill="#bc002d" cx="450" cy="300" r="180"/></svg>' > test.vercel.png
 ```
