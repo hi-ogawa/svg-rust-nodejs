@@ -1,11 +1,24 @@
 [package]
-name = "svg2png-nodejs"
+name = "svg-rust-nodejs"
 version = "0.0.1"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
+# resvg
 resvg = "0.23.0"
 usvg = "0.23.0"
 tiny-skia = "0.6"
+
+# librsvg
 librsvg = { git = "https://gitlab.gnome.org/GNOME/librsvg", branch = "librsvg-2.54" }
 cairo-rs = { version = "0.15", features=["png"] }
+
+# napi
+napi = "2"
+napi-derive = "2"
+
+[build-dependencies]
+napi-build = "1"

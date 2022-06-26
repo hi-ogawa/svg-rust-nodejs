@@ -1,0 +1,22 @@
+{
+  "name": "@hiogawa/svg-rust-nodejs",
+  "version": "1.0.0-alpha.1",
+  "homepage": "https://github.com/hi-ogawa/svg-rust-nodejs",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "devDependencies": {
+    "@napi-rs/cli": "^1.0.0"
+  },
+  "napi": {
+    "name": "svg-rust-nodejs"
+  },
+  "scripts": {
+    "napi": "napi build --platform",
+    "napi:release": "napi build --platform --release",
+    "release": "bash scripts/release.sh"
+  },
+  "volta": {
+    "node": "16.15.1",
+    "npm": "8.13.1"
+  }
+}
