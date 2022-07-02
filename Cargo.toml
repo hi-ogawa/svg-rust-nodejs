@@ -23,3 +23,7 @@ cairo-rs = { version = "0.15", features=["png"] }
 
 [build-dependencies]
 napi-build = "1"
+
+[features]
+default = ["embed-font"]
+embed-font = []

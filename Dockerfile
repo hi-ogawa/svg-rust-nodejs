@@ -3,7 +3,12 @@ FROM ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
 
 WORKDIR /app
 
-COPY ./ ./
-
+COPY ./package.json ./
+COPY ./package-lock.json ./
 RUN npm ci
+
+# TODO: there's no way to only fetch dependencies https://github.com/rust-lang/cargo/issues/2644
+# COPY ./Cargo.toml ./
+# COPY ./Cargo.lock ./
+COPY ./ ./
 RUN npm run napi:release
