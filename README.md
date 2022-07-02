@@ -2,7 +2,7 @@
 
 ```sh
 # experiment with svg rendering libraries
-cargo run --release --examples
+cargo build --release --examples
 ./target/release/examples/demo-resvg   test.svg test.resvg.png   800 600
 ./target/release/examples/demo-librsvg test.svg test.librsvg.png 800 600
 
