@@ -1,6 +1,7 @@
 import { uniq, zip } from "lodash";
 import assert from "assert";
 import { fetch } from "undici";
+import { includes, streamToString } from "./utils";
 
 export async function resolveExternalHref(data: string): Promise<string> {
   // find href
@@ -10,16 +11,17 @@ export async function resolveExternalHref(data: string): Promise<string> {
   // fetch resource
   const dataUrls = await Promise.all(
     urls.map(async (url) => {
-      const ext = url.split(".").at(-1);
+      url = xmlUnescape(url);
+      console.error(url);
+      const res = await fetch(xmlUnescape(url));
+      const contentType = res.headers.get("content-type");
       assert.ok(
-        ext && ["png", "jpg"].includes(ext),
-        `invalid href: ext = ${ext}`
+        includes(["image/jpg", "image/png"] as const, contentType),
+        `invalid content-type: ${contentType}`
       );
-
-      const res = await fetch(url);
       const bin = await res.arrayBuffer();
       const base64 = Buffer.from(bin).toString("base64");
-      return `data:image/${ext};base64,${base64}`;
+      return `data:${contentType};base64,${base64}`;
     })
   );
 
@@ -31,4 +33,32 @@ export async function resolveExternalHref(data: string): Promise<string> {
   }
 
   return result;
+}
+
+function xmlUnescape(value: string): string {
+  for (const [escaped, original] of XML_ESCAPES) {
+    value = value.replaceAll(escaped, original);
+  }
+  return value;
+}
+
+const XML_ESCAPES = [
+  ["&amp;", "&"],
+  ["&lt;", "<"],
+  ["&gt;", ">"],
+  ["&quot;", '"'],
+  ["&apos;", "'"],
+] as const;
+
+//
+// cli
+//
+
+async function main() {
+  const stdin = await streamToString(process.stdin);
+  process.stdout.write(await resolveExternalHref(stdin));
+}
+
+if (process.env.NODE_ENV !== "production" && require.main === module) {
+  main();
 }

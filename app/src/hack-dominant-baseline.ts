@@ -18,6 +18,10 @@ function replaceText(textTag: string): string {
   return textTag;
 }
 
+//
+// cli
+//
+
 async function main() {
   const stdin = await streamToString(process.stdin);
   process.stdout.write(hackDominantBaseline(stdin));
