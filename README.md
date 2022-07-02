@@ -26,6 +26,10 @@ npm run release
 # hack resvg's unsupported text layout
 npm -s -C app run cli ./src/hack-dominant-baseline.ts < misc/examples/test.svg > misc/examples/test.hack.svg
 node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack.svg", "misc/examples/test.hack.png")'
+
+# embed external image href as base64 data url
+npm -s -C app run cli ./src/hack-dominant-baseline.ts < misc/examples/test.svg > misc/examples/test.hack.svg
+node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack.svg", "misc/examples/test.hack.png")'
 ```
 
 ## todo
@@ -40,6 +44,8 @@ node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("mi
 - [x] hack unsupported `dominant-baseline`
   - https://github.com/RazrFalcon/resvg/issues/119
   - https://gitlab.gnome.org/GNOME/librsvg/-/issues/414
+- [ ] bad quality when resizing image
+  - for now, manually preprocess with the right size
 
 ## references
 
