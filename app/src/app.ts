@@ -3,6 +3,7 @@ import { IncomingMessage } from "http";
 import fastify, { FastifyReply } from "fastify";
 import { getTemporaryFile, sortKeys } from "./utils";
 import { svgToPng } from "@hiogawa/svg-rust-nodejs";
+import { fetch } from "undici";
 
 export const app = fastify({
   logger: true,
@@ -19,17 +20,20 @@ app.get("/", (req) => {
   const svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 900 600"><rect fill="#fff" height="600" width="900"/><circle fill="#bc002d" cx="450" cy="300" r="180"/></svg>';
   const example = `
-## example
+# example
 
 - GET
+
+${url}?url=https://raw.githubusercontent.com/hi-ogawa/svg-rust-nodejs/master/misc/examples/test.svg
 
 ${url}?svg=${encodeURIComponent(svg)}
 
 - POST
 
-curl ${url} -d '${svg}' > test.png
+curl https://raw.githubusercontent.com/hi-ogawa/svg-rust-nodejs/master/misc/examples/test.svg | curl ${url} -d @- > test.png
 
-`;
+curl ${url} -d '${svg}' > test.png
+`.trimStart();
   return example;
 });
 
@@ -40,12 +44,18 @@ app.get("/debug", async () => {
 });
 
 app.get("/svg2png", async (req, res) => {
-  const { svg } = req.query as any;
-  if (typeof svg !== "string") {
-    res.code(400).send({ message: "[ERROR] invalid parameter: svg" });
+  const { svg, url } = req.query as any;
+  if (typeof url === "string") {
+    const urlRes = await fetch(url);
+    const urlSvg = await urlRes.text();
+    await svg2pngHandler(urlSvg, res);
     return;
   }
-  await svg2pngHandler(svg, res);
+  if (typeof svg === "string") {
+    await svg2pngHandler(svg, res);
+    return;
+  }
+  res.code(400).send({ message: "[ERROR] invalid parameters" });
 });
 
 app.post("/svg2png", async (req, res) => {
