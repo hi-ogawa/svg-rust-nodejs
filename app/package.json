@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "nodemon --exec 'node -r esbuild-register' ./src/index.ts",
+    "cli": "node -r esbuild-register",
     "tsc": "tsc",
     "tsc:dev": "tsc --watch --preserveWatchOutput",
     "lint": "prettier -w .",
