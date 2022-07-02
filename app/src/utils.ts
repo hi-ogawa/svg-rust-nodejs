@@ -19,3 +19,10 @@ export async function streamToString(readable: Readable): Promise<string> {
   for await (const chunk of readable) res += chunk;
   return res;
 }
+
+export function includes<T extends readonly any[]>(
+  array: T,
+  value: any
+): value is T[number] {
+  return array.includes(value);
+}

@@ -24,8 +24,12 @@ docker-compose run -T --rm builder cat build/napi/svg-rust-nodejs.linux-x64-gnu.
 npm run release
 
 # hack resvg's unsupported text layout
-npm -s -C app run cli ./src/hack-dominant-baseline.ts < misc/examples/test.svg > misc/examples/test.hack.svg
-node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack.svg", "misc/examples/test.hack.png")'
+npm -s -C app run cli ./src/hack-dominant-baseline.ts < misc/examples/test.svg > misc/examples/test.hack1.svg
+node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack1.svg", "misc/examples/test.hack1.png")'
+
+# embed external image href as base64 data url
+npm -s -C app run cli ./src/resolve-external-href.ts < misc/examples/test.hack1.svg > misc/examples/test.hack2.svg
+node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack2.svg", "misc/examples/test.hack2.png")'
 ```
 
 ## todo
@@ -40,6 +44,8 @@ node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("mi
 - [x] hack unsupported `dominant-baseline`
   - https://github.com/RazrFalcon/resvg/issues/119
   - https://gitlab.gnome.org/GNOME/librsvg/-/issues/414
+- [x] low quality when resizing image
+  - manually preprocess e.g. via https://github.com/hi-ogawa/imageflow-node-aws-lambda
 
 ## references
 

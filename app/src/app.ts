@@ -1,10 +1,10 @@
 import fs from "fs";
-import { IncomingMessage } from "http";
 import fastify, { FastifyReply } from "fastify";
 import { getTemporaryFile, sortKeys, streamToString } from "./utils";
 import { svgToPng } from "@hiogawa/svg-rust-nodejs";
 import { fetch } from "undici";
 import { hackDominantBaseline } from "./hack-dominant-baseline";
+import { resolveExternalHref } from "./resolve-external-href";
 
 export const app = fastify({
   logger: true,
@@ -21,6 +21,7 @@ app.get("/", (req) => {
   const svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 900 600"><rect fill="#fff" height="600" width="900"/><circle fill="#bc002d" cx="450" cy="300" r="180"/></svg>';
   const example = `
+
 # example
 
 - GET
@@ -34,7 +35,8 @@ ${url}?svg=${encodeURIComponent(svg)}
 curl https://raw.githubusercontent.com/hi-ogawa/svg-rust-nodejs/master/misc/examples/test.svg | curl ${url} -d @- > test.png
 
 curl ${url} -d '${svg}' > test.png
-`.trimStart();
+
+`.trim();
   return example;
 });
 
@@ -69,6 +71,7 @@ async function svg2pngHandler(svg: string, res: FastifyReply) {
   const outFile = getTemporaryFile();
   try {
     svg = hackDominantBaseline(svg);
+    svg = await resolveExternalHref(svg);
     await fs.promises.writeFile(inFile, svg);
 
     // TODO: use worker_threads
