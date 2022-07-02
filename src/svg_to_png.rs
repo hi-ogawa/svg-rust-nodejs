@@ -13,6 +13,14 @@ pub fn svg_to_png(
     // configuration
     let mut opts = usvg::Options::default();
     opts.font_size = 16.0; // TODO: configurable
+
+    #[cfg(feature = "embed-font")]
+    {
+        opts.font_family = "Roboto".to_string();
+        let font_data = std::include_bytes!("../misc/fonts/roboto-android/Roboto-Regular.ttf");
+        opts.fontdb.load_font_data(font_data.to_vec());
+    }
+
     if let Some(font_family) = font_family {
         opts.font_family = font_family;
     }

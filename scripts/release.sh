@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eux -o pipefail
 
-# build binding
-npm run napi:release
-
 # package files
 package_dir=./build/dist
 package_files=(
@@ -11,8 +8,7 @@ package_files=(
   package.json
   index.js
   index.d.ts
-  build/napi/svg-rust-nodejs.lts-debian.node
-  # build/napi/svg-rust-nodejs.linux-x64-gnu.node
+  build/napi/svg-rust-nodejs.linux-x64-gnu.node
 )
 
 rm -rf "$package_dir"
