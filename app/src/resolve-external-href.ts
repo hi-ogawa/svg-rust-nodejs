@@ -12,7 +12,6 @@ export async function resolveExternalHref(data: string): Promise<string> {
   const dataUrls = await Promise.all(
     urls.map(async (url) => {
       url = xmlUnescape(url);
-      console.error(url);
       const res = await fetch(xmlUnescape(url));
       const contentType = res.headers.get("content-type");
       assert.ok(
