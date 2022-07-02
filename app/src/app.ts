@@ -1,9 +1,10 @@
 import fs from "fs";
 import { IncomingMessage } from "http";
 import fastify, { FastifyReply } from "fastify";
-import { getTemporaryFile, sortKeys } from "./utils";
+import { getTemporaryFile, sortKeys, streamToString } from "./utils";
 import { svgToPng } from "@hiogawa/svg-rust-nodejs";
 import { fetch } from "undici";
+import { hackDominantBaseline } from "./hack-dominant-baseline";
 
 export const app = fastify({
   logger: true,
@@ -59,17 +60,16 @@ app.get("/svg2png", async (req, res) => {
 });
 
 app.post("/svg2png", async (req, res) => {
-  await svg2pngHandler(req.raw, res);
+  const svg = await streamToString(req.raw);
+  await svg2pngHandler(svg, res);
 });
 
-async function svg2pngHandler(
-  input: string | IncomingMessage,
-  res: FastifyReply
-) {
+async function svg2pngHandler(svg: string, res: FastifyReply) {
   const inFile = getTemporaryFile();
   const outFile = getTemporaryFile();
   try {
-    await fs.promises.writeFile(inFile, input);
+    svg = hackDominantBaseline(svg);
+    await fs.promises.writeFile(inFile, svg);
 
     // TODO: use worker_threads
     svgToPng(inFile, outFile);

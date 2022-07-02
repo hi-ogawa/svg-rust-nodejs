@@ -22,6 +22,10 @@ docker-compose run -T --rm builder cat build/napi/svg-rust-nodejs.linux-x64-gnu.
 
 # publish npm package
 npm run release
+
+# hack resvg's unsupported text layout
+npm -s -C app run cli ./src/hack-dominant-baseline.ts < misc/examples/test.svg > misc/examples/test.hack.svg
+node -e 'require("./build/napi/svg-rust-nodejs.linux-x64-gnu.node").svgToPng("misc/examples/test.hack.svg", "misc/examples/test.hack.png")'
 ```
 
 ## todo
@@ -33,7 +37,7 @@ npm run release
 - [x] deploy on aws lambda
 - [ ] testing and CI
 - [ ] build for multi platform
-- [ ] hack unsupported `dominant-baseline`
+- [x] hack unsupported `dominant-baseline`
   - https://github.com/RazrFalcon/resvg/issues/119
   - https://gitlab.gnome.org/GNOME/librsvg/-/issues/414
 
