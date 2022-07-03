@@ -82,7 +82,7 @@ async function svg2pngHandler(svg: string, res: FastifyReply) {
     res.header("content-type", "image/png");
     res.send(outData);
   } finally {
-    fs.rmSync(inFile);
-    fs.rmSync(outFile);
+    fs.rmSync(inFile, { force: true });
+    fs.rmSync(outFile, { force: true });
   }
 }

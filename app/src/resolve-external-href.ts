@@ -1,7 +1,7 @@
 import { uniq, zip } from "lodash";
 import assert from "assert";
 import { fetch } from "undici";
-import { includes, streamToString } from "./utils";
+import { streamToString } from "./utils";
 
 export async function resolveExternalHref(data: string): Promise<string> {
   // find href
@@ -13,14 +13,9 @@ export async function resolveExternalHref(data: string): Promise<string> {
     urls.map(async (url) => {
       url = xmlUnescape(url);
       const res = await fetch(xmlUnescape(url));
-      const contentType = res.headers.get("content-type");
-      assert.ok(
-        includes(["image/jpg", "image/png"] as const, contentType),
-        `invalid content-type: ${contentType}`
-      );
       const bin = await res.arrayBuffer();
       const base64 = Buffer.from(bin).toString("base64");
-      return `data:${contentType};base64,${base64}`;
+      return `data:;base64,${base64}`;
     })
   );
 
