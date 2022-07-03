@@ -11,7 +11,7 @@
     "deploy:production": "npm run build && vercel deploy --prod"
   },
   "dependencies": {
-    "@hiogawa/svg-rust-nodejs": "1.0.0-alpha.4"
+    "@hiogawa/svg-rust-nodejs": "1.0.0-alpha.6"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
