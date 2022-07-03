@@ -4,6 +4,7 @@ api server deployed as aws lambda on vercel
 
 ```sh
 # development
+npm run prepare:fonts
 npm install
 npm run dev
 

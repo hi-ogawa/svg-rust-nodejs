@@ -6,12 +6,13 @@
     "tsc:dev": "tsc --watch --preserveWatchOutput",
     "lint": "prettier -w .",
     "lint:check": "prettier -c .",
-    "build": "esbuild src/index-vercel.ts --outfile=build/vercel/index.js --bundle --platform=node --external:@hiogawa/svg-rust-nodejs",
-    "deploy": "npm run build && vercel deploy",
-    "deploy:production": "npm run build && vercel deploy --prod"
+    "build": "bash scripts/build.sh",
+    "prepare:fonts": "cp -f ../misc/fonts/16_NotoSansJP/NotoSansJP-Regular.otf fonts/NotoSansJP-Regular.otf",
+    "deploy": "npm run build && vercel deploy --prebuilt build/deploy",
+    "deploy:production": "npm run build && vercel deploy --prebuilt build/deploy --prod"
   },
   "dependencies": {
-    "@hiogawa/svg-rust-nodejs": "1.0.0-alpha.6"
+    "@hiogawa/svg-rust-nodejs": "1.0.0-alpha.8"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

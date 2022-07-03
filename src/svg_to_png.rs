@@ -8,8 +8,8 @@ use usvg;
 pub fn svg_to_png(
     in_file: String,
     out_file: String,
-    font_family: Option<String>,
-    font_file: Option<String>,
+    default_font_family: Option<String>, // TODO: rename to default_font_family
+    font_files: Option<Vec<String>>,     // TODO: support multiple files
 ) -> Result<()> {
     // configuration
     let mut opts = usvg::Options::default();
@@ -18,15 +18,18 @@ pub fn svg_to_png(
     #[cfg(feature = "embed-font")]
     {
         opts.font_family = "Roboto".to_string();
-        let font_data = std::include_bytes!("../misc/fonts/roboto-android/Roboto-Regular.ttf");
-        opts.fontdb.load_font_data(font_data.to_vec()); // logging only when error
+        opts.fontdb.load_font_data(
+            std::include_bytes!("../misc/fonts/roboto-android/Roboto-Regular.ttf").to_vec(),
+        ); // 298.4K
     }
 
-    if let Some(font_family) = font_family {
-        opts.font_family = font_family;
+    if let Some(default_font_family) = default_font_family {
+        opts.font_family = default_font_family;
     }
-    if let Some(font_file) = font_file {
-        opts.fontdb.load_font_file(font_file)?;
+    if let Some(font_files) = font_files {
+        for font_file in font_files {
+            opts.fontdb.load_font_file(font_file)?;
+        }
     }
 
     // conver svg to usvg tree
