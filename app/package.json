@@ -23,7 +23,8 @@
     "nodemon": "^2.0.18",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4",
-    "undici": "^5.6.0"
+    "undici": "^5.6.0",
+    "zod": "^3.17.3"
   },
   "volta": {
     "node": "16.15.1",
