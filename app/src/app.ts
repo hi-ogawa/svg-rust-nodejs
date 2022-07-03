@@ -25,8 +25,10 @@ app.get("/", (req) => {
   const url = `${protocol}://${req.hostname}/svg2png`;
   const svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 900 600"><rect fill="#fff" height="600" width="900"/><circle fill="#bc002d" cx="450" cy="300" r="180"/></svg>';
-  const svgText =
+  const svgEmbeddedFont =
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" style="font-size:40px;" fill="#000">日本語テスト</text></svg>';
+  const svgCustomFont =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" style="font-size:40px;" fill="#000">🅐🄰🄐</text></svg>';
   const example = `
 
 # example
@@ -41,11 +43,15 @@ ${url}?url=https://raw.githubusercontent.com/hi-ogawa/svg-rust-nodejs/master/mis
 
 ${url}?svg=${encodeURIComponent(svg)}
 
+  - svg parameter (embedded font)
+
+${url}?svg=${encodeURIComponent(svgEmbeddedFont)}
+
   - fontUrl parameter
 
 ${url}?svg=${encodeURIComponent(
-    svgText
-  )}&fontUrl=https://rawcdn.githack.com/googlefonts/noto-cjk/acb30accc6b2aa8838c6cfbf0486de28358a657b/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf
+    svgCustomFont
+  )}&fontUrl=https://rawcdn.githack.com/googlefonts/noto-emoji/c0040cb09cae5ee7ec3723251d7fa2581673c50b/fonts/NotoColorEmoji.ttf
 
 - POST
 
@@ -131,15 +137,16 @@ async function svg2pngHandler(
     svg = await resolveExternalHref(svg);
     await fs.promises.writeFile(inFile, svg);
 
+    const fontFiles = [...EMBEDDED_FONT_FILES];
     if (fontUrl) {
       const fontRes = await fetch(fontUrl);
       if (fontRes.body) {
         await fs.promises.writeFile(fontFile, fontRes.body);
+        fontFiles.push(fontFile);
       }
     }
-
     // TODO: use worker_threads
-    svgToPng(inFile, outFile, fontFamily, fontUrl ? fontFile : undefined);
+    svgToPng(inFile, outFile, fontFamily, fontFiles);
 
     const outData = await fs.promises.readFile(outFile);
 
@@ -151,3 +158,5 @@ async function svg2pngHandler(
     fs.rmSync(fontFile, { force: true });
   }
 }
+
+const EMBEDDED_FONT_FILES = ["fonts/NotoSansJP-Regular.otf"];
